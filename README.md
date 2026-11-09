@@ -1,4 +1,4 @@
-<img src="images/Monaca_store.png" align="right" width="130" alt="Monaca Mascot" />
+﻿<img src="images/Monaca_store.png" align="right" width="130" alt="Monaca Mascot" />
 
 # Monacaアプリ工房 (Monaca App Store)
 
@@ -26,17 +26,33 @@ flowchart TD
     end
 
     Excel --> Gpib["【 GpibAddIn 】 GPIB 計測器・電源制御アドイン"]
-    Excel --> Term["【 TermAddIn 】 シリアル・ネットワーク・PLC 通信制御アドイン"]
+    Excel --> Term["【 TermAddIn 】 シリアル・ネットワーク・PLC 総合通信アドイン"]
 
     subgraph GpibDetails["Gpib 制御対象ハードウェア"]
         Gpib --> GpibDev["GPIB (IEEE-488) 通信（CONTEC / Interface 対応）<br>マルチメータ・オシロスコープ・直流安定化電源・電子負荷"]
     end
 
-    subgraph TermDetails["Term 4大機能分類体系（ドメイン租）"]
-        Term --> Modbus["【 Modbus 】 産業用 Modbus 通信<br>(Modbus RTU / ASCII / TCP: PLC・温調器・インバータ・電力計)"]
-        Term --> Melco["【 Melco 】 三菱電機 MELSEC 計算機リンク<br>(プロトコル1 / プロトコル4: シーケンサ・PLC制御)"]
-        Term --> Comm["【 Comm 】 COM ポートシリアル通信<br>(RS-232C / UART: シリアル通信機器・マイコン基板・測定治具)"]
-        Term --> Telnet["【 TelNet 】 Telnet ネットワーク通信<br>(Telnet / TCPソケット: ネットワーク機器・Linux端末制御)"]
+    subgraph TermArchitecture["Term プラグイン・エクステンション体系（ExtAnalysis）"]
+        Term --> TermCore["共通通信基盤・コアエンジン (Core / Transport)"]
+
+        TermCore --> ExtStandard
+        ExtStandard -. 順次拡張 .-> ExtFuture
+
+        subgraph ExtStandard["【 標準搭載エクステンション群 】"]
+            direction LR
+            Modbus["産業用オープンプロトコル<br><b>Modbus</b> (RTU / ASCII / TCP)"]
+            Melco["PLC・FA 通信<br><b>Melco</b> (MELSEC 計算機リンク P1 / P4)"]
+            Comm["汎用シリアル通信<br><b>Comm</b> (RS-232C / UART / 仮想COM)"]
+            Telnet["ネットワーク対話通信<br><b>Telnet</b> (Telnet / TCPソケット)"]
+        end
+
+        subgraph ExtFuture["【 将来拡張エクステンション群（順次追加予定） 】"]
+            direction LR
+            OMRON["オムロン PLC<br><b>FINS / Sysmac</b>"]
+            KEYENCE["キーエンス PLC<br><b>KV 上位リンク / MC</b>"]
+            CAN["車載・FA フィールドバス<br><b>CAN / CANopen</b>"]
+            IoT["無線・IoT 計測<br><b>BLE / IoT センサ</b>"]
+        end
     end
 ```
 
@@ -72,14 +88,31 @@ flowchart TD
 
 ## 🔌 製品ラインナップ
 
+### 1. Excel VSTO アドイン製品（Core Add-Ins）
+
 | 分類 | 製品名 | 対象インターフェース / デバイス・機能分類 | ステータス | 評価期間 | 主な用途・特徴 | リンク |
 | :---: | :--- | :--- | :---: | :---: | :--- | :---: |
 | **Gpib** | **GpibAddIn** | **GPIB (IEEE-488)**<br>CONTEC / Interface 対応 | **公開中** | **〜2026/10/31** | デジタルマルチメータ、オシロスコープ、直流安定化電源、電子負荷などの自動測定・データ収集 | [詳細を見る](https://github.com/Monaca-App/GpibAddIn) |
-| **Term** | **TermAddIn** | **Serial / Network / PLC 機器制御**<br>・**Modbus** (RTU / ASCII / TCP)<br>・**Melco** (MELSEC 計算機リンク P1 / P4)<br>・**Comm** (RS-232C / UART)<br>・**TelNet** (Telnet / TCP ソケット) | 近日公開 | 公開時に設定 | 各種 PLC、温調器、インバータ、電力計、組込みマイコン、シリアル通信機器、ネットワーク機器の総合制御 | [詳細を見る](https://github.com/Monaca-App/Term) |
+| **Term** | **TermAddIn** | **シリアル・ネットワーク・PLC 総合通信基盤**<br>基本通信エンジン＋プラグイン型エクステンション連携 | 近日公開 | 公開時に設定 | Excel 上から多様な通信プロトコルを統合制御する通信プラットフォームアドイン | [詳細を見る](https://github.com/Monaca-App/TermAddIn) |
 | *将来拡張* | **DIOAddIn** | **Digital I/O (DIO)**<br>絶縁デジタル入出力カード等 | 企画中 | 公開時に設定 | リレー制御、スイッチ状態検知、シリンダ動作制御、製造ラインのインターロック監視 | 準備中 |
 | *将来拡張* | **AIOAddIn** | **Analog I/O (AIO)**<br>A/D変換、D/A変換ユニット | 企画中 | 公開時に設定 | 電圧・電流のリアルタイムロギング、各種センサ（温度・圧力・歪み）モニタリング、アナログ波形出力 | 準備中 |
 
-※各個別製品リポジトリ（`Monaca-App/[製品名]`）は、最上位規程（[Apr/rule/開発運用基本規程.Md](../../Apr/rule/開発運用基本規程.Md) 2.3.1項）に準拠した共通の単独リポジトリ公開構成（ルート直下に `README.md`, `Manual/`, `images/` 等）を採用しています。
+### 2. Term 通信エクステンション・ラインナップ（Term Extensions）
+
+TermAddIn は、機能ドメイン単一 DLL（ExtAnalysis）アーキテクチャを採用しており、通信規格や制御機器ごとのエクステンションを追加・切り替えて柔軟に機能を拡張できます。現在標準搭載されている 4 大エクステンションに加え、今後も各社 PLC や産業用フィールドネットワーク、各種無線通信など多彩なエクステンションを順次拡張・提供予定です。
+
+| 分類（カテゴリ） | エクステンション名 | 対象プロトコル / 仕様 | 提供状況 | 主な対象機器・用途 | リンク |
+| :--- | :--- | :--- | :---: | :--- | :---: |
+| **産業用オープンプロトコル** | **Modbus エクステンション**<br>(`TermAnalysis.Modbus`) | Modbus RTU / Modbus ASCII / Modbus TCP | **標準搭載** | 各種 PLC、温調器、インバータ、電力計、各種産業用センサの保持/入力レジスタ読出・書込 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_Modbus) |
+| **PLC・FA 通信** | **MELSEC エクステンション**<br>(`TermAnalysis.Melco`) | 三菱電機 MELSEC 計算機リンク<br>(プロトコル 1 / プロトコル 4) | **標準搭載** | MELSEC-Q / L / iQ-R / A / FX シリーズとのビット・ワードデバイス一括読出・書込・サムチェック自動検証 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_Melco) |
+| **汎用シリアル通信** | **Comm エクステンション**<br>(`TermAnalysis.Comm`) | RS-232C, RS-422, RS-485, UART<br>(USB 仮想 COM ポート対応) | **標準搭載** | シリアル通信計測器、電子天秤、バーコードリーダー、組込みマイコン評価基板、検査治具コントローラ | [詳細を見る](https://github.com/Monaca-App/TermAddIn_Comm) |
+| **ネットワーク・端末対話** | **Telnet エクステンション**<br>(`TermAnalysis.Telnet`) | Telnet (RFC 854 準拠), TCP 生ソケット | **標準搭載** | ネットワークスイッチ、ルーター、組込み Linux 機器、Ethernet コントローラへのコマンド対話・ログ収集 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_Telnet) |
+| *FA 通信拡張 (企画中)* | **FINS / Sysmac エクステンション** | オムロン FINS プロトコル / HostLink | 企画中 | オムロン製 PLC (CJ / CS / NJ / NX シリーズ) のデータメモリ・I/O 制御 | 準備中 |
+| *FA 通信拡張 (企画中)* | **KV 上位リンク エクステンション** | キーエンス KV 上位リンク通信 / MCプロトコル | 企画中 | キーエンス製 PLC (KV-8000 / 7000 / 5000 等) のリレー・DM 制御 | 準備中 |
+| *フィールドバス拡張 (企画中)* | **CAN / CANopen エクステンション** | CAN 2.0A/B, CANopen, J1939 | 企画中 | 車載電装品、ECU 通信テスト、産業用モータドライバ・アクチュエータ制御 | 準備中 |
+| *無線・IoT 拡張 (企画中)* | **BLE / IoT エクステンション** | Bluetooth Low Energy, Bluetooth SPP | 企画中 | 無線環境センサ、スマート測定機器、IoT 治具からのリアルタイムロギング | 準備中 |
+
+※各個別製品の詳細な取扱説明や最新リリースのダウンロードについては、上記リンクより各製品の公開リポジトリをご確認ください。
 
 ---
 
@@ -138,7 +171,7 @@ TermAddIn は、Excel ワークシート上からプログラミング（VBA）�
      * `Com_Send`: 文字列電文の送信。
      * `Com_SendFile`: 外部テキストファイルを読み込み、行単位で逐次送信。
      * `Com_WaitPrompt`: プロンプト文字列の受信待機（指定タイムアウト ms、タイムアウト時ジャンプ機能）。
-4. **Telnet ネットワーク通信機能群（`TelNet`）**:
+4. **Telnet ネットワーク通信機能群（`Telnet`）**:
    * **概要**: LAN / Ethernet ネットワーク経由での Telnet プロトコルおよび生 TCP ソケット通信。
    * **対応プロトコル**: Telnet (RFC 854 準拠), TCP 生ソケット。
    * **対象機器**: ネットワークスイッチ、ルーター、組込み Linux 機器、Ethernet 通信対応コントローラ。
@@ -155,7 +188,23 @@ TermAddIn は、Excel ワークシート上からプログラミング（VBA）�
 * **フロー制御・対話（`Sequence`）**: 条件判定（`Judge`）、ジャンプ（`Jump`）、ダイアログ表示（`Msg_Box`）、外部プログラム呼出（`Ext_Call`）。
 * **ファイル入出力（`File`）**: テキストファイルの読込・書込・追記（`Read_File`, `Write_File`, `Append_File`）。
 
-👉 **[TermAddIn の取扱説明・ダウンロードはこちら](https://github.com/Monaca-App/Term)**
+#### 🚀 Term エクステンション拡張ロードマップ（今後の機能拡張予定）
+TermAddIn は、機能ドメイン単一 DLL（ExtAnalysis）による高い拡張性を備えており、製造現場や開発環境からのニーズに応じて、以下の通信・FA 機器制御エクステンションを順次開発・拡張していく予定です。
+
+1. **オムロン PLC 通信エクステンション（`FINS` / `Sysmac`）**:
+   * **概要**: オムロン製 PLC（Sysmac CS / CJ / NJ / NX シリーズ）との FINS 通信（Ethernet / シリアル）および上位リンク（HostLink）通信の完全自動化。
+   * **想定機能**: CIO / WR / HR / DM / EM 各種エリアのビット・ワード単位の一括読出・書込、レスポンスコード自動検証。
+2. **キーエンス PLC 通信エクステンション（`KV` / `MC`）**:
+   * **概要**: キーエンス製 PLC（KV-8000 / 7000 / 5000 / Nano シリーズ）との上位リンク通信および MC プロトコル通信の自動化。
+   * **想定機能**: リレー（R）、タイマー（T）、データメモリ（DM）、拡張データメモリ（EM）の高速連続読出・設定値変更。
+3. **車載・産業用フィールドバス エクステンション（`CAN` / `CANopen`）**:
+   * **概要**: CAN 2.0A / 2.0B および CANopen プロトコルによる車載電装品・産業用アクチュエータ・インバータ制御。
+   * **想定機能**: CAN ID 指定によるメッセージ送信、周期送受信、受信 ID フィルタリング、SDO / PDO 通信制御。
+4. **無線・IoT 計測エクステンション（`BLE` / `Wireless`）**:
+   * **概要**: Bluetooth Low Energy (BLE) GATT 通信や Bluetooth SPP による無線センサ・IoT デバイスのリアルタイムデータ収集。
+   * **想定機能**: BLE アドバタイズパケットの受信、GATT サービス / キャラクタリスティックの自動検出、Notify / Read による Excel セル自動記録。
+
+👉 **[TermAddIn の取扱説明・ダウンロードはこちら](https://github.com/Monaca-App/TermAddIn)**
 
 ---
 
@@ -188,7 +237,7 @@ TermAddIn は、Excel ワークシート上からプログラミング（VBA）�
 >   * **CONTEC 製（`CGPIB.DLL`）**: Excel 32bit 環境では完全動作。Excel 64bit 環境での実機通信には CONTEC 公式の 64bit 対応ドライバー（API-GPIB x64）の導入が必須となります。
 >   * **Interface 製（`gpc4304.dll`）**: Excel 32bit 環境では完全動作。Interface 製ライブラリは 32bit 専用（サポート終了）のため Excel 64bit 環境からは直接ロードできません（実機自動測定時は Excel 32bit 環境での運用が必須）。
 > * **TermAddIn**:
->   * .NET Framework 標準のマネージド通信コンポーネント（`System.IO.Ports` / `System.Net.Sockets`）を採用しているため、外部ネイティブ DLL に依存しません。Excel 32bit 環境 / Excel 64bit 環境のいずれでも、4大ドメイン（Modbus, Melco, Comm, TelNet）すべてが完全動作します。
+>   * .NET Framework 標準のマネージド通信コンポーネント（`System.IO.Ports` / `System.Net.Sockets`）を採用しているため、外部ネイティブ DLL に依存しません。Excel 32bit 環境 / Excel 64bit 環境のいずれでも、4大ドメイン（Modbus, Melco, Comm, Telnet）すべてが完全動作します。
 
 
 ---
