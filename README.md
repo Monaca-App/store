@@ -21,32 +21,34 @@ VBA マクロのプログラミングや専用ツールの複雑な学習は一�
 
 ```mermaid
 flowchart TD
-    subgraph Excel["Microsoft Excel ワークシート (.xlsx)"]
+    subgraph Excel ["Microsoft Excel ワークシート (.xlsx)"]
         Row["[ 実行 ] | Wait(ms) | Command (命令) | Result (取得結果) | Param 1 | Param 2 ..."]
     end
 
     Excel --> Gpib["【 GpibAddIn 】 GPIB 計測器・電源制御アドイン"]
     Excel --> Term["【 TermAddIn 】 シリアル・ネットワーク・PLC 総合通信アドイン"]
 
-    subgraph GpibDetails["Gpib 制御対象ハードウェア"]
+    subgraph GpibDetails ["Gpib 制御対象ハードウェア"]
         Gpib --> GpibDev["GPIB (IEEE-488) 通信（CONTEC / Interface 対応）<br>マルチメータ・オシロスコープ・直流安定化電源・電子負荷"]
     end
 
-    subgraph TermArchitecture["Term プラグイン・エクステンション体系（ExtAnalysis）"]
+    subgraph TermArchitecture ["Term プラグイン・エクステンション体系（ExtAnalysis）"]
         Term --> TermCore["共通通信基盤・コアエンジン (Core / Transport)"]
+        C2C["【 c2c 】 ドライバ不要 仮想ヌルモデム＆通信モニター<br/>仮想 COM ペア / TCP ブリッジ / リアルタイム電文監視"] -. 仮想COM折り返し・電文監視 .-> TermCore
 
         TermCore --> ExtStandard
         ExtStandard -. 順次拡張 .-> ExtFuture
 
-        subgraph ExtStandard["【 標準搭載エクステンション群 】"]
+        subgraph ExtStandard ["【 標準搭載エクステンション群 】"]
             direction LR
             Modbus["産業用オープンプロトコル<br><b>Modbus</b> (RTU / ASCII / TCP)"]
-            Melco["PLC・FA 通信<br><b>Melco</b> (MELSEC 計算機リンク P1 / P4)"]
+            Melco["PLC・FA 通信<br><b>Melco</b> (MELSEC 計算機リンク 形式1〜5)"]
+            MelcoMC["PLC・FA 通信<br><b>MelcoMC</b> (MELSEC MC 3Eフレーム)"]
             Comm["汎用シリアル通信<br><b>Comm</b> (RS-232C / UART / 仮想COM)"]
             Telnet["ネットワーク対話通信<br><b>Telnet</b> (Telnet / TCPソケット)"]
         end
 
-        subgraph ExtFuture["【 将来拡張エクステンション群（順次追加予定） 】"]
+        subgraph ExtFuture ["【 将来拡張エクステンション群（順次追加予定） 】"]
             direction LR
             OMRON["オムロン PLC<br><b>FINS / Sysmac</b>"]
             KEYENCE["キーエンス PLC<br><b>KV 上位リンク / MC</b>"]
@@ -104,7 +106,8 @@ TermAddIn は、機能ドメイン単一 DLL（ExtAnalysis）アーキテクチ�
 | 分類（カテゴリ） | エクステンション名 | 対象プロトコル / 仕様 | 提供状況 | 主な対象機器・用途 | リンク |
 | :--- | :--- | :--- | :---: | :--- | :---: |
 | **産業用オープンプロトコル** | **Modbus エクステンション**<br>(`TermAnalysis.Modbus`) | Modbus RTU / Modbus ASCII / Modbus TCP | **標準搭載** | 各種 PLC、温調器、インバータ、電力計、各種産業用センサの保持/入力レジスタ読出・書込 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_Modbus) |
-| **PLC・FA 通信** | **MELSEC エクステンション**<br>(`TermAnalysis.Melco`) | 三菱電機 MELSEC 計算機リンク<br>(プロトコル 1 / プロトコル 4) | **標準搭載** | MELSEC-Q / L / iQ-R / A / FX シリーズとのビット・ワードデバイス一括読出・書込・サムチェック自動検証 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_Melco) |
+| **PLC・FA 通信** | **MELSEC 計算機リンク エクステンション**<br>(`TermAnalysis.Melco`) | 三菱電機 MELSEC 計算機リンク<br>(形式 1 〜 形式 5、高水準コマンド対応) | **標準搭載** | MELSEC-Q / L / iQ-R / A / FX シリーズとのビット・ワードデバイス一括読出・書込・サムチェック自動検証 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_Melco) |
+| **PLC・FA 通信** | **MELSEC MCプロトコル エクステンション**<br>(`TermAnalysis.MelcoMC`) | 三菱電機 MELSEC MCプロトコル<br>(3Eフレーム・Ethernet バイナリ交信) | **標準搭載** | MELSEC-Q / L / iQ-R シリーズ CPU・Ethernet 直結での高速ワード・ビット一括読出・書込 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_MelcoMC) |
 | **汎用シリアル通信** | **Comm エクステンション**<br>(`TermAnalysis.Comm`) | RS-232C, RS-422, RS-485, UART<br>(USB 仮想 COM ポート対応) | **標準搭載** | シリアル通信計測器、電子天秤、バーコードリーダー、組込みマイコン評価基板、検査治具コントローラ | [詳細を見る](https://github.com/Monaca-App/TermAddIn_Comm) |
 | **ネットワーク・端末対話** | **Telnet エクステンション**<br>(`TermAnalysis.Telnet`) | Telnet (RFC 854 準拠), TCP 生ソケット | **標準搭載** | ネットワークスイッチ、ルーター、組込み Linux 機器、Ethernet コントローラへのコマンド対話・ログ収集 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_Telnet) |
 | *FA 通信拡張 (企画中)* | **FINS / Sysmac エクステンション** | オムロン FINS プロトコル / HostLink | 企画中 | オムロン製 PLC (CJ / CS / NJ / NX シリーズ) のデータメモリ・I/O 制御 | 準備中 |
@@ -112,7 +115,15 @@ TermAddIn は、機能ドメイン単一 DLL（ExtAnalysis）アーキテクチ�
 | *フィールドバス拡張 (企画中)* | **CAN / CANopen エクステンション** | CAN 2.0A/B, CANopen, J1939 | 企画中 | 車載電装品、ECU 通信テスト、産業用モータドライバ・アクチュエータ制御 | 準備中 |
 | *無線・IoT 拡張 (企画中)* | **BLE / IoT エクステンション** | Bluetooth Low Energy, Bluetooth SPP | 企画中 | 無線環境センサ、スマート測定機器、IoT 治具からのリアルタイムロギング | 準備中 |
 
-※各個別製品の詳細な取扱説明や最新リリースのダウンロードについては、上記リンクより各製品の公開リポジトリをご確認ください。
+### 3. 開発支援・通信テスト用コンパニオンツール（Companion Utilities）
+
+実機や RS-232C / RS-485 変換器が手元にないノート PC 環境や、カーネルドライバの導入・管理者権限が制限された社内 PC 環境でも、Term / TermAddIn のシリアル通信シーケンスを即座に折り返し検証・電文監視できる公式ユーティリティを提供しています。
+
+| 分類 | ツール名 | 対応モード / 機能 | 提供状況 | 主な用途・特徴 | リンク |
+| :---: | :--- | :--- | :---: | :--- | :---: |
+| **シリアル検証** | **c2c** | **ドライバ不要 仮想ヌルモデム・シリアル中継＆通信モニター**<br>仮想 COM ペア / TCP ブリッジ / 物理シリアル中継 | **無償提供** | カーネルドライバ・管理者権限・OS 再起動一切不要。TermAddIn（`Comm` / `Modbus` RTU・ASCII / `Melco`）のポート選択に自動連携し、HEX / ASCII 電文をリアルタイム監視・CSV 保存 | [詳細を見る](https://github.com/Monaca-App/c2c) |
+
+※各個別製品・ツールの詳細な取扱説明や最新リリースのダウンロードについては、上記リンクより各公開リポジトリをご確認ください。
 
 ---
 
@@ -154,14 +165,23 @@ TermAddIn は、Excel ワークシート上からプログラミング（VBA）�
      * `Modbus_Write`: レジスタへの設定値書込（CRC-16 / LRC / MBAP ヘッダの自動計算・付与）。
 2. **MELSEC 計算機リンク通信機能群（`Melco`）**:
    * **概要**: 三菱電機製シーケンサ（MELSEC）とのシリアル／ネットワーク計算機リンク通信を完全自動化。
-   * **対応プロトコル**: MELSEC 計算機リンク「プロトコル 1（形式 1 / Checksum付与）」および「プロトコル 4（形式 4 / Checksum＋CR/LF付与）」。
+   * **対応プロトコル**: MELSEC 計算機リンク 形式 1 〜 形式 5（全 5 形式完全サポート）および高水準デバイスアクセス。
    * **対象機器**: 三菱電機 MELSEC-Q / L / iQ-R / A / FX シリーズ シーケンサ・PLC。
    * **主要コマンド・機能**:
-     * `Melsec_Open` / `Melsec_Close` / `Melsec_Mode`: 回線オープン・クローズおよび通信条件・プロトコル形式（P1 / P4）の設定。
-     * `Melsec_P1s_S` / `Melsec_P4s_S`: コマンド電文の送信（フレームヘッダ・コマンド・サムチェック等の自動計算・付与）。
-     * `Melsec_P1s_R` / `Melsec_P4s_R`: 要求電文の受信待機。
-     * `Melsec_Res_P1s_R` / `Melsec_Res_P4s_R`: シーケンサからの応答電文受信・サムチェック自動検証、およびデバイス値（16進 / 10進）の結果セルへの自動展開。
-3. **COM ポートシリアル通信機能群（`Comm`）**:
+     * `Melsec_ReadWord` / `Melsec_WriteWord`: ワードデバイス（D, W, R 等）の一括読み出し・書き込み。
+     * `Melsec_ReadBit` / `Melsec_WriteBit`: ビットデバイス（X, Y, M, L 等）の一括読み出し・書き込み。
+     * `Melsec_Loopback`: 回線折り返し通信診断（ループバックテスト）。
+     * `Melsec_Open` / `Melsec_Close` / `Melsec_Mode`: 回線オープン・クローズおよび通信条件・プロトコル形式（P1 〜 P5）の設定。
+     * `Melsec_P1s_S` 〜 `Melsec_P5s_S` / `Melsec_Res_P1s_R` 〜 `Melsec_Res_P5s_R`: 各形式別の低水準フレーム送受信・サムチェック自動検証。
+3. **MELSEC MCプロトコル通信機能群（`MelcoMC`）**:
+   * **概要**: 三菱電機製シーケンサ（MELSEC）とのイーサネット直接通信（MC プロトコル 3E フレーム・バイナリ交信）を自動化。
+   * **対応プロトコル**: MC プロトコル Qna 互換 3E フレーム（TCP/IP）。
+   * **対象機器**: 三菱電機 MELSEC-Q / L / iQ-R シリーズ 内蔵 Ethernet ポートおよび Ethernet ユニット。
+   * **主要コマンド・機能**:
+     * `Mc_Open` / `Mc_Close`: TCP ソケット接続オープン・クローズ。
+     * `Mc_ReadWord` / `Mc_WriteWord`: ワードデバイス（D, W, R 等）の一括読出・書込。
+     * `Mc_ReadBit`: ビットデバイス（X, Y, M, L 等）の一括読出。
+4. **COM ポートシリアル通信機能群（`Comm`）**:
    * **概要**: RS-232C や USB 仮想シリアルポート経由での機器制御・対話通信・ログ収集。
    * **対応インターフェース**: RS-232C, RS-422, RS-485, UART, USB-Serial 変換ポート。
    * **対象機器**: シリアル通信対応計測器、組込みマイコン評価基板、バーコードリーダー、電子天秤、検査治具コントローラ。
@@ -171,7 +191,7 @@ TermAddIn は、Excel ワークシート上からプログラミング（VBA）�
      * `Com_Send`: 文字列電文の送信。
      * `Com_SendFile`: 外部テキストファイルを読み込み、行単位で逐次送信。
      * `Com_WaitPrompt`: プロンプト文字列の受信待機（指定タイムアウト ms、タイムアウト時ジャンプ機能）。
-4. **Telnet ネットワーク通信機能群（`Telnet`）**:
+5. **Telnet ネットワーク通信機能群（`Telnet`）**:
    * **概要**: LAN / Ethernet ネットワーク経由での Telnet プロトコルおよび生 TCP ソケット通信。
    * **対応プロトコル**: Telnet (RFC 854 準拠), TCP 生ソケット。
    * **対象機器**: ネットワークスイッチ、ルーター、組込み Linux 機器、Ethernet 通信対応コントローラ。
@@ -185,8 +205,13 @@ TermAddIn は、Excel ワークシート上からプログラミング（VBA）�
 * **データ整形・抽出（`Work`）**: `Set_Data`（`sscanf` / `sprintf` 書式による受信バッファからのデータ抽出・整形・行追記）、`Time_Stamp`（ミリ秒単位の送受信タイムスタンプ自動付与）。
 * **パラメータ・演算・サブルーチン（`Param`）**: `Param_Set` / `Param_Get` / `Param_Move`、四則演算・剰余計算（`Param_Add`, `Param_Mul`, `Param_Div`, `Param_Mod`）、サブルーチン呼出（`Call`）、ループ制御（`Loop` / `Next` / `Break`）。
 * **配列操作（`Array`）**: 配列の初期化、結合、分割、置換、転置（二次元セル展開対応）。
-* **フロー制御・対話（`Sequence`）**: 条件判定（`Judge`）、ジャンプ（`Jump`）、ダイアログ表示（`Msg_Box`）、外部プログラム呼出（`Ext_Call`）。
+* **フロー制御・対話（`Sequence` / `Excel`）**: 条件判定（`Judge` / `Excel_Judge`）、ジャンプ（`Jump` / `Excel_Jump`）、シート行ループ（`Excel_Loop` / `Excel_Next`）、ダイアログ表示（`Msg_Box` / `Excel_Msg_Box`）、外部プログラム呼出（`Ext_Call`）。
 * **ファイル入出力（`File`）**: テキストファイルの読込・書込・追記（`Read_File`, `Write_File`, `Append_File`）。
+
+#### 🔄 実機なし開発・通信モニター連携（公式無償ツール `c2c`）
+* **ドライバ不要の仮想 COM 折り返しテスト**: 公式コンパニオンツール **[c2c](https://github.com/Monaca-App/c2c)** を起動するだけで、カーネルモードドライバの導入や管理者権限なしに仮想 COM ポートペア（例: `COM10` ⇔ `COM11`）や TCP ブリッジを利用できます。
+* **シリアル 3 ドメインへの自動ポート連携**: 稼働中の仮想ポートは `Comm`・`Modbus`（RTU / ASCII）・`Melco`（計算機リンク）のポート選択ドロップダウンへ自動表示され、実機がない環境でも本番同一の Excel シーケンスを検証できます。
+* **リアルタイム HEX / ASCII 電文モニター**: 通過する全送受信フレームをミリ秒タイムスタンプ付きで可視化・CSV エクスポートでき、通信デバッグや検査エビデンス取得を強力に支援します。
 
 #### 🚀 Term エクステンション拡張ロードマップ（今後の機能拡張予定）
 TermAddIn は、機能ドメイン単一 DLL（ExtAnalysis）による高い拡張性を備えており、製造現場や開発環境からのニーズに応じて、以下の通信・FA 機器制御エクステンションを順次開発・拡張していく予定です。
@@ -227,7 +252,7 @@ TermAddIn は、機能ドメイン単一 DLL（ExtAnalysis）による高い拡�
 | **OS** | Windows 10 / Windows 11 (64bit / 32bit) |
 | **対応 Excel** | Microsoft Excel 2016 / 2019 / 2021 / Microsoft 365 (デスクトップ版 32bit / 64bit) |
 | **必須ランタイム** | .NET Framework 4.8<br>Visual Studio 2010 Tools for Office Runtime (VSTO ランタイム) |
-| **必須ドライバー** | ・**GpibAddIn**: 各メーカーのデバイスドライバー（CONTEC API-GPIB / Interface GPC-4304 等）<br>　※動作シミュレーションモード利用時はメーカー提供ドライバーのインストールも不要<br>・**TermAddIn**: 外部専用ドライバー不要（.NET 標準マネージド通信基盤により完全動作） |
+| **必須ドライバー** | ・**GpibAddIn**: 各メーカーのデバイスドライバー（CONTEC API-GPIB / Interface GPC-4304 等）<br>　※動作シミュレーションモード利用時はメーカー提供ドライバーのインストールも不要<br>・**TermAddIn**: 外部専用ドライバー不要（.NET 標準マネージド通信基盤により完全動作。また実機なしの仮想 COM 折り返しテストも無償ツール [c2c](https://github.com/Monaca-App/c2c) によりカーネルドライバー不要で実行可能） |
 | **必要権限** | 各種デバイスドライバーのインストールおよび実行権限（GpibAddIn の実機通信時のみ） |
 
 > [!NOTE]
@@ -237,7 +262,8 @@ TermAddIn は、機能ドメイン単一 DLL（ExtAnalysis）による高い拡�
 >   * **CONTEC 製（`CGPIB.DLL`）**: Excel 32bit 環境では完全動作。Excel 64bit 環境での実機通信には CONTEC 公式の 64bit 対応ドライバー（API-GPIB x64）の導入が必須となります。
 >   * **Interface 製（`gpc4304.dll`）**: Excel 32bit 環境では完全動作。Interface 製ライブラリは 32bit 専用（サポート終了）のため Excel 64bit 環境からは直接ロードできません（実機自動測定時は Excel 32bit 環境での運用が必須）。
 > * **TermAddIn**:
->   * .NET Framework 標準のマネージド通信コンポーネント（`System.IO.Ports` / `System.Net.Sockets`）を採用しているため、外部ネイティブ DLL に依存しません。Excel 32bit 環境 / Excel 64bit 環境のいずれでも、4大ドメイン（Modbus, Melco, Comm, Telnet）すべてが完全動作します。
+>   * .NET Framework 標準のマネージド通信コンポーネント（`System.IO.Ports` / `System.Net.Sockets`）を採用しているため、外部ネイティブ DLL に依存しません。Excel 32bit 環境 / Excel 64bit 環境のいずれでも、5大ドメイン（Modbus, Melco, MelcoMC, Comm, Telnet）すべてが完全動作します。
+>   * さらに、実機シリアル機器がない環境での事前開発・通信デバッグ時も、公式無償ツール **[c2c](https://github.com/Monaca-App/c2c)** を併用することで、カーネルドライバの導入や管理者権限なしに仮想 COM 折り返し通信およびリアルタイム電文監視を行えます。
 
 
 ---
