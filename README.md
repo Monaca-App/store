@@ -118,12 +118,12 @@ TermAddIn は、機能ドメイン単一 DLL（ExtAnalysis）アーキテクチ�
 | **PLC・FA 通信** | **KV 上位リンク エクステンション**<br>(`TermAnalysis.Keyence`) | キーエンス KV 上位リンク通信<br>(Ethernet TCP/UDP 8501・RS-232C シリアル) | **標準搭載（公開中）** | キーエンス KV-8000 / 7500 / 5500 / 5000 / 3000 / Nano シリーズの DM / EM / MR / R 一括読出・書込 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_Keyence) |
 | **汎用シリアル通信** | **Comm エクステンション**<br>(`TermAnalysis.Comm`) | RS-232C, RS-422, RS-485, UART<br>(USB 仮想 COM ポート対応) | **標準搭載（公開中）** | シリアル通信計測器、電子天秤、バーコードリーダー、組込みマイコン評価基板、検査治具コントローラ | [詳細を見る](https://github.com/Monaca-App/TermAddIn_Comm) |
 | **ネットワーク・端末対話** | **Telnet エクステンション**<br>(`TermAnalysis.Telnet`) | Telnet (RFC 854 準拠), TCP 生ソケット | **標準搭載（公開中）** | ネットワークスイッチ、ルーター、組込み Linux 機器、Ethernet コントローラへのコマンド対話・ログ収集 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_Telnet) |
-| *LAN 計測器・基本通信 (企画中)* | **LxiRaw エクステンション**<br>(`TermAnalysis.LxiRaw`) | SCPI Raw Socket (TCP 5025 等), IEEE 488.2 バイナリブロック<br>*(VISA 不要・mDNS/XML 識別同梱)* | 企画中 | LAN 対応 DMM・電源・オシロスコープの最も手軽な VISA レス自動計測・波形取得 | 準備中 |
-| *LAN 計測器・基本通信 (企画中)* | **LxiVxi11 エクステンション**<br>(`TermAnalysis.LxiVxi11`) | VXI-11 (ONC RPC / Portmapper 111 / XDR), 帯域外 STB・Clear・Trigger・Lock<br>*(VISA 不要・mDNS/XML 識別同梱)* | 企画中 | LXI Core 必須計測器、GPIB-LAN ゲートウェイ、帯域外ステータス監視・排他ロック制御 | 準備中 |
-| *LAN 計測器・基本通信 (企画中)* | **LxiHiSlip エクステンション**<br>(`TermAnalysis.LxiHiSlip`) | HiSLIP (TCP 4880 / 同期・非同期 2ch), LXI 1.6 TLS 2.0 暗号化<br>*(VISA 不要・mDNS/XML 識別同梱)* | 企画中 | 最新世代の高速計測器による大容量波形転送、非同期 SRQ・厳格ロック制御 | 準備中 |
-| *LAN 計測器・LXI 拡張 (企画中)* | **LxiEvent エクステンション**<br>(`TermAnalysis.LxiEvent`) | LXI Event Messaging (UDP 224.0.23.159:5044 / TCP), LXI Event Logs | 企画中 | ハードウェア配線なしでの複数機器 LAN イベント同期トリガ・イベントログ時系列収集 | 準備中 |
-| *LAN 計測器・LXI 拡張 (企画中)* | **LxiSync エクステンション**<br>(`TermAnalysis.LxiSync`) | IEEE 1588 PTPv2 時刻同期監視, Timestamped Data 整列, Wired Trigger Bus (WTB) | 企画中 | 複数計測器の PTP 同期確認、未来時刻指定の一斉トリガ、WTB (`LXI0`〜`LXI7`) 制御 | 準備中 |
-| *LAN 計測器・運用拡張 (企画中)* | **LxiMulti エクステンション**<br>(`TermAnalysis.LxiMulti`) | マルチ LXI 計測器 同時セッション・エイリアス管理・並列クエリ | 企画中 | 電源＋DMM＋オシロ等の複数 LAN 計測器の一括接続・一斉トリガ・並列自動測定 | 準備中 |
+| *LAN 計測器・基本通信 (企画中)* | **LxiRaw エクステンション**<br>(`TermAnalysis.LxiRaw`) | SCPI Raw Socket (TCP 5025 等), IEEE 488.2 バイナリブロック<br>*(VISA 不要・mDNS/XML 識別同梱)* | 企画中 | LAN 対応 DMM・電源・オシロスコープの最も手軽な VISA レス自動計測・波形取得 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_LxiRaw) |
+| *LAN 計測器・基本通信 (企画中)* | **LxiVxi11 エクステンション**<br>(`TermAnalysis.LxiVxi11`) | VXI-11 (ONC RPC / Portmapper 111 / XDR), 帯域外 STB・Clear・Trigger・Lock<br>*(VISA 不要・mDNS/XML 識別同梱)* | 企画中 | LXI Core 必須計測器、GPIB-LAN ゲートウェイ、帯域外ステータス監視・排他ロック制御 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_LxiVxi11) |
+| *LAN 計測器・基本通信 (企画中)* | **LxiHiSlip エクステンション**<br>(`TermAnalysis.LxiHiSlip`) | HiSLIP (TCP 4880 / 同期・非同期 2ch), LXI 1.6 TLS 2.0 暗号化<br>*(VISA 不要・mDNS/XML 識別同梱)* | 企画中 | 最新世代の高速計測器による大容量波形転送、非同期 SRQ・厳格ロック制御 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_LxiHiSlip) |
+| *LAN 計測器・LXI 拡張 (企画中)* | **LxiEvent エクステンション**<br>(`TermAnalysis.LxiEvent`) | LXI Event Messaging (UDP 224.0.23.159:5044 / TCP), LXI Event Logs | 企画中 | ハードウェア配線なしでの複数機器 LAN イベント同期トリガ・イベントログ時系列収集 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_LxiEvent) |
+| *LAN 計測器・LXI 拡張 (企画中)* | **LxiSync エクステンション**<br>(`TermAnalysis.LxiSync`) | IEEE 1588 PTPv2 時刻同期監視, Timestamped Data 整列, Wired Trigger Bus (WTB) | 企画中 | 複数計測器の PTP 同期確認、未来時刻指定の一斉トリガ、WTB (`LXI0`〜`LXI7`) 制御 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_LxiSync) |
+| *LAN 計測器・運用拡張 (企画中)* | **LxiMulti エクステンション**<br>(`TermAnalysis.LxiMulti`) | マルチ LXI 計測器 同時セッション・エイリアス管理・並列クエリ | 企画中 | 電源＋DMM＋オシロ等の複数 LAN 計測器の一括接続・一斉トリガ・並列自動測定 | [詳細を見る](https://github.com/Monaca-App/TermAddIn_LxiMulti) |
 | *無線・IoT 拡張 (企画中)* | **BLE / IoT エクステンション** | Bluetooth Low Energy, Bluetooth SPP | 企画中 | 無線環境センサ、スマート測定機器、IoT 治具からのリアルタイムロギング | 準備中 |
 
 ### 3. 開発支援・通信テスト・仮想エミュレーションツール（Companion & Simulation Tools）
@@ -245,7 +245,7 @@ TermAddIn は、機能ドメイン単一 DLL（ExtAnalysis）による高い拡�
    * **独立ラインナップ（企画中）**:
      * **基本通信 3 拡張**: `LxiRaw`（SCPI Raw Socket 5025 ＋ IEEE 488.2 バイナリブロック）、`LxiVxi11`（VXI-11 / ONC RPC ＋ 帯域外 STB・Lock・Trigger）、`LxiHiSlip`（HiSLIP 4880 / 同期・非同期 2ch / TLS 2.0）
      * **LXI 拡張機能・運用拡張 3 拡張**: `LxiEvent`（LAN Event Messaging & Event Logs）、`LxiSync`（IEEE 1588 PTPv2 同期監視・未来時刻トリガ・WTB 制御）、`LxiMulti`（複数 LXI 計測器の同時セッション・並列クエリ統括）
-     * **共通標準機能（各拡張へ無償同梱）**: mDNS 自動機器スキャン、LXI XML 識別情報取得（HTTP / HTTPS）、Web UI 起動、および `TermEmulator` 仮想シミュレータ連携
+     * **共通標準機能（各拡張へ無償同梱）**: mDNS 自動機器スキャン、LXI XML 識別情報取得（HTTP / HTTPS）、Web UI 起動、`TermEmulator` 仮想シミュレータ連携、および **計測器の仕様書 PDF からコマンド定義 CSV を自動生成する生成 AI プロンプト（用意予定）**
 2. **無線・IoT 計測エクステンション（`BLE` / `Wireless`）**:
    * **概要**: Bluetooth Low Energy (BLE) GATT 通信や Bluetooth SPP による無線センサ・IoT デバイスのリアルタイムデータ収集。
    * **想定機能**: BLE アドバタイズパケットの受信、GATT サービス / キャラクタリスティックの自動検出、Notify / Read による Excel セル自動記録。
